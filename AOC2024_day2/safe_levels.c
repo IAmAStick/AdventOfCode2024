@@ -4,8 +4,8 @@
 
 typedef struct report{
     int level[10];
-    struct report *next;
     int rep_level_num;
+    struct report *next;
 } report_t;
 
 FILE *file;
@@ -46,10 +46,10 @@ int is_safe(report_t *head)
 {
     report_t *comp = head;
     int safe_check = 1;
-    int unsafe_cnt = 0;
+    //int unsafe_cnt = 0;
     if((comp->level[0]==comp->level[1])||(abs(comp->level[0] - comp->level[1])<1)||(abs(comp->level[0] - comp->level[1])>3)){
         safe_check = 0;
-
+        //unsafe_cnt++;
     }
     for (int blob = 1; blob < comp->rep_level_num - 1; blob++) {     
         if((comp->level[0] > comp->level[1])){
@@ -68,6 +68,33 @@ int is_safe(report_t *head)
     return(safe_check);
 }
 
+int damp_safe(report_t *head){
+    int how_many = 0;
+    int damp_safe =0;
+    report_t *comp = head;
+    report_t *temp = (report_t *)calloc(1,sizeof(report_t));
+    //memcpy(temp, comp, sizeof(comp));
+    for(int i = 0; i<comp->rep_level_num;i++){
+        for(int j = 0; j<comp->rep_level_num-1;j++){
+            if(j>=i){
+                temp->level[j] = comp->level[j+1]; 
+            }else if(j<i){
+                temp->level[j] = comp->level[j];
+            }
+            printf(" %d, \n", temp->level[j]);
+        }
+        printf("\n");
+        printf("comp %d \n", comp->level[i]);
+        temp->rep_level_num = comp->rep_level_num - 1;
+        damp_safe = is_safe(temp);
+        if(damp_safe){
+            printf("safe head %d\n", comp->level[0]);
+            return(damp_safe);
+        }
+    }
+    return damp_safe;
+}
+
 int how_many_safe(report_t *head)
 {   
     int safe_cnt = 0;
@@ -75,7 +102,7 @@ int how_many_safe(report_t *head)
     int safe = 1; 
     report_t *comp = head;
     while(comp->next != NULL){
-        safe = is_safe(comp);
+        safe = damp_safe(comp);
         if(safe == 1){
             safe_cnt++;
         }
