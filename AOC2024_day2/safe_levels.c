@@ -69,11 +69,10 @@ int is_safe(report_t *head)
 }
 
 int damp_safe(report_t *head){
-    int how_many = 0;
     int damp_safe =0;
     report_t *comp = head;
     report_t *temp = (report_t *)calloc(1,sizeof(report_t));
-    //memcpy(temp, comp, sizeof(comp));
+
     for(int i = 0; i<comp->rep_level_num;i++){
         for(int j = 0; j<comp->rep_level_num-1;j++){
             if(j>=i){
@@ -81,14 +80,11 @@ int damp_safe(report_t *head){
             }else if(j<i){
                 temp->level[j] = comp->level[j];
             }
-            printf(" %d, \n", temp->level[j]);
         }
-        printf("\n");
-        printf("comp %d \n", comp->level[i]);
+
         temp->rep_level_num = comp->rep_level_num - 1;
         damp_safe = is_safe(temp);
         if(damp_safe){
-            printf("safe head %d\n", comp->level[0]);
             return(damp_safe);
         }
     }
