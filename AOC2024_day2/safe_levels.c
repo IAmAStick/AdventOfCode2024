@@ -8,8 +8,6 @@ typedef struct report{
     struct report *next;
 } report_t;
 
-FILE *file;
-
 report_t *new_report()
 {
     report_t *new_rep_node = (report_t *)malloc(sizeof(report_t));
@@ -110,6 +108,7 @@ int how_many_safe(report_t *head)
 
 int main()
 {
+    FILE *file;
     file = fopen("test.txt", "r");
         if (file == NULL) {
             printf("Error: Could not open file %s\n", "list_day1_1.txt");
